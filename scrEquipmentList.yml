@@ -1,0 +1,324 @@
+Screens:
+  scrEquipmentList:
+    Properties:
+      Fill: =RGBA(237, 237, 237, 1)
+      Height: =800
+      LoadingSpinnerColor: =RGBA(100, 118, 132, 1)
+      Width: =1200
+    Children:
+      - Label1_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.Verdana
+            Height: =78.40
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =16.80
+            Text: ="Awesome CMMS"
+            Width: =270
+            Y: =9.60
+      - Button1_5:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(32, 54, 71, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(219, 219, 219, 1)
+            Font: =Font.'Open Sans'
+            Height: =32.00
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
+            PaddingBottom: =2.40
+            PaddingLeft: =2.40
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =11.20
+            Text: ="Dashboards"
+            Width: =128
+            X: =383
+            Y: =9.60
+      - Button1_6:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(32, 54, 71, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(219, 219, 219, 1)
+            Font: =Font.'Open Sans'
+            Height: =32.00
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
+            PaddingBottom: =2.40
+            PaddingLeft: =2.40
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =11.20
+            Text: ="Assets"
+            Width: =128
+            X: =533
+            Y: =9.60
+      - Button1_7:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(32, 54, 71, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(219, 219, 219, 1)
+            Font: =Font.'Open Sans'
+            Height: =32.00
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
+            OnSelect: =Navigate(scrWorkOrderList, ScreenTransition.None)
+            PaddingBottom: =2.40
+            PaddingLeft: =2.40
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =11.20
+            Text: ="Work Orders"
+            Width: =128
+            X: =684
+            Y: =9.60
+      - Button1_8:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =RGBA(32, 54, 71, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(219, 219, 219, 1)
+            Font: =Font.'Open Sans'
+            Height: =32.00
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
+            PaddingBottom: =2.40
+            PaddingLeft: =2.40
+            PaddingRight: =3
+            PaddingTop: =3
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =11.20
+            Text: ="Reports"
+            Width: =128
+            X: =834
+            Y: =9.60
+      - Button1_9:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(100, 118, 132, 1)
+            Font: =Font.'Open Sans'
+            Height: =32.00
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
+            OnSelect: |-
+              =NewForm(EditForm1); // Assuming your form is named EditForm1
+              Navigate(scrAddEditEquipment, ScreenTransition.None)
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =11.20
+            Text: ="Add Asset"
+            Width: =128
+            X: =988
+            Y: =9.60
+      - txtSearchEquipment_1:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Clear: =true
+            Default: =
+            Font: =Font.'Open Sans'
+            Height: =36.80
+            HintText: ="Search assets by ID, location, or status"
+            HoverBorderColor: =RGBA(32, 54, 71, 1)
+            HoverFill: =RGBA(205, 209, 213, 1)
+            PaddingBottom: =4.00
+            PaddingLeft: =9.60
+            Size: =12.80
+            Width: =1061
+            X: =20
+            Y: =88.00
+      - labAssetID_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =37.60
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =12.00
+            Text: ="Asset ID"
+            Width: =114
+            Y: =202.40
+      - labStatus_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =37.60
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =12.00
+            Text: ="Status"
+            Width: =191
+            X: =192
+            Y: =202.40
+      - labLocation_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =37.60
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =12.00
+            Text: ="Location"
+            Width: =114
+            X: =472
+            Y: =202.40
+      - labNextMaintenance_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =37.60
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =12.00
+            Text: ="Next Maintenance"
+            Width: =182
+            X: =694
+            Y: =202.40
+      - labLastUpdated_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =37.60
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =12.00
+            Text: ="Last Updated"
+            Width: =151
+            X: =944
+            Y: =202.40
+      - galEquipmentList_1:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Properties:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            BorderThickness: =1
+            Height: =382.40
+            Items: =Search('[dbo].[CMMS_Equipment]',txtSearchEquipment_1.Text,EquipmentAssetTag,Location,Status)
+            OnSelect: |-
+              =EditForm(EditForm1); // Set the form to Edit mode for the selected item
+              Navigate(scrAddEditEquipment, ScreenTransition.None)
+            ShowNavigation: =true
+            TemplatePadding: =4.00
+            TemplateSize: =70.40
+            Width: =1123
+            Y: =240.00
+          Children:
+            - galAssetID_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =56.00
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =ThisItem.EquipmentAssetTag
+                  Width: =128
+                  X: =16
+                  Y: =6.40
+            - galStatus_1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(224, 228, 230, 1)
+                  Fill: =If(ThisItem.Status = "Operational", Color.LightGreen, ThisItem.Status = "Under Maintenance", Color.LightYellow, Color.LightGray)
+                  FocusedBorderThickness: =1
+                  Font: =Font.'Open Sans'
+                  Height: =56.00
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =2.40
+                  PaddingLeft: =2.40
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  Size: =11.20
+                  Text: =ThisItem.Status
+                  Width: =230
+                  X: =161
+                  Y: =6.40
+            - galLocation_1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =56.00
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =ThisItem.Location
+                  Width: =281
+                  X: =391
+                  Y: =6.40
+            - galNextMaintenance_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =56.00
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =Text(ThisItem.NextMaintenanceDate,"yyyy-mm-dd")
+                  Width: =128
+                  X: =703
+                  Y: =6.40
+            - galLastUpdated_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =56.00
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =Text(ThisItem.LastUpdatedDate,"yyyy-mm-dd")
+                  Width: =128
+                  X: =944
+                  Y: =6.40

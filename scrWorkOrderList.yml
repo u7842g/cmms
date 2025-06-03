@@ -1,0 +1,387 @@
+Screens:
+  scrWorkOrderList:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      Height: =800
+      LoadingSpinnerColor: =RGBA(100, 118, 132, 1)
+      Width: =1200
+    Children:
+      - labHeader:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: |-
+              ="AssetTrack
+              "
+            Width: =113
+            X: =47
+            Y: =20.00
+      - galWorkOrderList:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Properties:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Height: =328.80
+            Items: =CMMS_WorkOrders
+            OnSelect: |-
+              =EditForm(formWorkOrder); // Assuming formWorkOrder is on scrAddEditWorkOrder
+              Navigate(scrAddEditWorkOrder, ScreenTransition.None)
+            TemplatePadding: =4.00
+            TemplateSize: =60.80
+            Width: =1123
+            Y: =252.80
+          Children:
+            - galID:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =45.60
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =ThisItem.WorkOrderNumber
+                  Width: =157
+                  X: =28
+                  Y: =6.40
+            - galEquipID:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =38.40
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =LookUp('[dbo].[CMMS_Equipment]', EquipmentID = ThisItem.EquipmentID).EquipmentName
+                  Width: =155
+                  X: =211
+                  Y: =6.40
+            - galStatus:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Fill: |-
+                    =// Based on CMMS_WorkOrders.Status CHECK Constraint
+                    // ('Open', 'Assigned', 'In Progress', 'Completed')
+                    // You might have more like 'On Hold', 'Cancelled' if you expanded.
+                    Switch(
+                        ThisItem.Status,
+                        "Open", ColorFade(RGBA(135, 206, 250, 1), 20%), // LightSkyBlue, slightly faded
+                        "In Progress", ColorFade(RGBA(255, 165, 0, 1), 20%), // Orange, slightly faded
+                        "Completed", ColorFade(RGBA(60, 179, 113, 1), 20%), // MediumSeaGreen, slightly faded
+                        Color.LightGray // Default color
+                    )
+                  Font: =Font.'Open Sans'
+                  Height: =45.60
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =ThisItem.Status
+                  Width: =140
+                  X: =395
+                  Y: =6.40
+            - galWOType:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =45.60
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =ThisItem.WorkOrderType
+                  Width: =166
+                  X: =535
+                  Y: =6.40
+            - galWODueDt:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =45.60
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: =Text(ThisItem.DueDate, "yyyy-mm-dd")
+                  Width: =188
+                  X: =700
+                  Y: =6.40
+            - galTechnician:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =45.60
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =4.00
+                  PaddingLeft: =4.00
+                  Size: =11.20
+                  Text: |-
+                    =If(
+                        IsBlank(ThisItem.AssignedTechnicianID), 
+                        "Unassigned", 
+                        LookUp(CMMS_Technicians, TechnicianID = ThisItem.AssignedTechnicianID).TechnicianName
+                    )
+                  Width: =253
+                  X: =800
+                  Y: =6.40
+      - labDashboard:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            OnSelect: =Navigate(scrEquipmentList, ScreenTransition.None)
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="Dashboard"
+            Width: =113
+            X: =177
+            Y: =20.00
+      - labAssets:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            OnSelect: =Navigate(scrEquipmentList, ScreenTransition.None)
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="Assets"
+            Width: =113
+            X: =314
+            Y: =20.00
+      - labWorkOrders:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="Work Orders"
+            Width: =113
+            X: =447
+            Y: =20.00
+      - labReports:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="Reports"
+            Width: =113
+            X: =589
+            Y: =20.00
+      - labEquipment:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="EquipmentID"
+            Width: =131
+            X: =228
+            Y: =188.80
+      - labWOStatus:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: |-
+              ="Status
+              "
+            Width: =113
+            X: =412
+            Y: =188.80
+      - labID:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="ID"
+            Width: =113
+            X: =64
+            Y: =188.80
+      - txtSearchWorkOrders:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Clear: =true
+            Default: =
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            HintText: |-
+              ="Search by WO #, Title, or Equipment..."
+            HoverBorderColor: =RGBA(32, 54, 71, 1)
+            HoverFill: =RGBA(205, 209, 213, 1)
+            PaddingBottom: =4.00
+            PaddingLeft: =9.60
+            Size: =12.00
+            Width: =896
+            Y: =140.00
+      - labWOStatus_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: |-
+              ="Work Order Type
+              "
+            Width: =113
+            X: |+
+              =560
+            Y: =188.80
+      - Label1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =44.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =16.80
+            Text: ="Work Orders"
+            Width: =230
+            Y: =96.00
+      - labDueDate:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: ="Work Order Due Dt"
+            Width: =113
+            X: |+
+              =725
+            Y: =188.80
+      - labTechnician:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Font: =Font.'Open Sans'
+            Height: =48.80
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            Size: =11.20
+            Text: '="Technician"        '
+            Width: =113
+            X: |+
+              =875
+            Y: =188.80
+      - btnCreateNewWorkOrder:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(100, 118, 132, 1)
+            Font: =Font.'Open Sans'
+            Height: =52.00
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
+            OnSelect: |-
+              =// Get the current year
+              Set(gblCurrentYear, Text(Year(Today()), "####")); // Changed to Set and prefixed with gbl
+              Notify("Current Year: " & gblCurrentYear, NotificationType.Information, 2000);
+
+              // Find the highest existing WO number for the current year
+              Set(gblLastWoForYearRecord, First( // <<<< CORRECTED TO First()
+                  Sort(
+                      Filter(
+                          CMMS_WorkOrders,
+                          StartsWith(WorkOrderNumber, "WO-" & gblCurrentYear & "-")
+                      ),
+                      WorkOrderNumber, 
+                      SortOrder.Descending // Sorts so highest number like "WO-2025-00002" is first
+                  )
+              ));
+              Notify("Last WO Record for Year (WO Number): " & If(IsBlank(gblLastWoForYearRecord), "BLANK", gblLastWoForYearRecord.WorkOrderNumber), NotificationType.Information, 5000);
+
+              // Determine the next sequence number
+              Set(gblExtractedLastNumberString, // Changed to Set
+                  If(
+                      IsBlank(gblLastWoForYearRecord.WorkOrderNumber),
+                      "0", 
+                      Last(Split(gblLastWoForYearRecord.WorkOrderNumber, "-")).Value
+                  )
+              );
+              Notify("Extracted Last Number String: " & gblExtractedLastNumberString, NotificationType.Information, 5000);
+
+              Set(gblConvertedNumber, Value(gblExtractedLastNumberString)); // Changed to Set
+              Notify("Converted Number (Value): " & Text(gblConvertedNumber), NotificationType.Information, 5000);
+
+              Set(gblNextWoSequence, gblConvertedNumber + 1); // Changed to Set
+              Notify("Next WO Sequence: " & Text(gblNextWoSequence), NotificationType.Information, 5000);
+
+              // Format the new WorkOrderNumber
+              Set(gblNewWorkOrderNumber, "WO-" & gblCurrentYear & "-" & Text(gblNextWoSequence, "[$-en-US]00000")); // CHANGED TO Set and prefixed with gbl
+              Notify("New WO Number: " & gblNewWorkOrderNumber, NotificationType.Information, 5000);
+
+              // Now proceed to open the form and navigate
+              NewForm(formWorkOrder);
+              Navigate(scrAddEditWorkOrder, ScreenTransition.UnCoverRight) // Or your preferred transition
+            PaddingBottom: =4.00
+            PaddingLeft: =4.00
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            Size: =11.20
+            Text: ="New Work Order"
+            Width: =117
+            X: =1002
+            Y: =20.00
