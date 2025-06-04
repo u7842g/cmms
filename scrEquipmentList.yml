@@ -237,9 +237,9 @@ Screens:
             BorderThickness: =1
             Height: =382.40
             Items: =Search('[dbo].[CMMS_Equipment]',txtSearchEquipment_1.Text,EquipmentAssetTag,Location,Status)
-            OnSelect: |-
-              =EditForm(EditForm1); // Set the form to Edit mode for the selected item
-              Navigate(scrAddEditEquipment, ScreenTransition.None)
+            OnSelect: |-                                                                          # MODIFIED for context
+              =EditForm(EditForm1); // This sets form mode on target screen
+              Navigate(scrAddEditEquipment, ScreenTransition.None, {selectedEquipmentForForm: Self.Selected})
             ShowNavigation: =true
             TemplatePadding: =4.00
             TemplateSize: =70.40

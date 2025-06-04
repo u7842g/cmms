@@ -29,9 +29,8 @@ Screens:
             BorderColor: =RGBA(32, 54, 71, 1)
             Height: =328.80
             Items: =CMMS_WorkOrders
-            OnSelect: |-
-              =EditForm(formWorkOrder); // Assuming formWorkOrder is on scrAddEditWorkOrder
-              Navigate(scrAddEditWorkOrder, ScreenTransition.None)
+            OnSelect: |-                                                              # MODIFIED
+              =Navigate(scrWorkOrderView, ScreenTransition.None, {WorkOrderID: Self.Selected.WorkOrderID}) # MODIFIED - Navigate to scrWorkOrderView & pass WorkOrderID
             TemplatePadding: =4.00
             TemplateSize: =60.80
             Width: =1123
