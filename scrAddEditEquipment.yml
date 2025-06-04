@@ -13,9 +13,9 @@ Screens:
           Properties:
             BorderColor: =RGBA(32, 54, 71, 1)
             DataSource: ='[dbo].[CMMS_Equipment]'
-            DefaultMode: =//FormMode.New
+            DefaultMode: =If(IsBlank(Param("selectedEquipmentForForm")), FormMode.New, FormMode.Edit)
             Height: =640
-            Item: =galEquipmentList_1.Selected
+            Item: =If(IsBlank(Param("selectedEquipmentForForm")), Parent.Default, Param("selectedEquipmentForForm"))
             NumberOfColumns: =2
             OnFailure: |-
               =Notify(

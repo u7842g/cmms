@@ -1293,7 +1293,7 @@ Screens:
                   DisplayName: =DataSourceInfo([@CMMS_WorkOrders],DataSourceInfo.DisplayName,'LastUpdatedDate')
                   Height: =81.60
                   Required: =true
-                  Update: =If(Not IsBlank(DateValue7.SelectedDate), DateTime(Year(DateValue7.SelectedDate), Month(DateValue7.SelectedDate), Day(DateValue7.SelectedDate), Value(HourValue7.Selected.Value), Value(MinuteValue7.Selected.Value), 0))
+                  Update: =Now()                                                                  # MODIFIED by subtask
                   Width: =561
                   X: =1
                   Y: =6
@@ -1469,7 +1469,7 @@ Screens:
                   DisplayName: =DataSourceInfo([@CMMS_WorkOrders],DataSourceInfo.DisplayName,'CreatedDate')
                   Height: =82.40
                   Required: =true
-                  Update: =If(Not IsBlank(DateValue8.SelectedDate), DateTime(Year(DateValue8.SelectedDate), Month(DateValue8.SelectedDate), Day(DateValue8.SelectedDate), Value(HourValue8.Selected.Value), Value(MinuteValue8.Selected.Value), 0))
+                  Update: =Blank()                                                              # MODIFIED by subtask
                   Width: =561
                   X: =0
                   Y: =7
@@ -1645,7 +1645,7 @@ Screens:
                   DisplayName: =DataSourceInfo([@CMMS_WorkOrders],DataSourceInfo.DisplayName,'DateRequested')
                   Height: =82.40
                   Required: =true
-                  Update: =If(Not IsBlank(DateValue9.SelectedDate), DateTime(Year(DateValue9.SelectedDate), Month(DateValue9.SelectedDate), Day(DateValue9.SelectedDate), Value(HourValue9.Selected.Value), Value(MinuteValue9.Selected.Value), 0))
+                  Update: =Blank()                                                              # MODIFIED by subtask
                   Width: =561
                   X: =1
                   Y: =7

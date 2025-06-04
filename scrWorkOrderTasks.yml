@@ -1,48 +1,231 @@
 Screens:
   scrWorkOrderTasks:
     Properties:
-      Fill: =RGBA(255, 255, 255, 1)
-      Height: =800
-      LoadingSpinnerColor: =RGBA(100, 118, 132, 1)
-      Width: |+
-        =1200
+      Fill: =RGBA(245, 245, 245, 1) # Light grey background
+      Height: =App.Height
+      Width: =App.Width
+      LoadingSpinnerColor: =RGBA(56, 102, 158, 1)
+      OnVisible: |-
+        =Set(gblSelectedWorkOrderID, Param("SelectedWorkOrderID"));
+        Refresh(CMMS_WorkOrderTasks);
+        UpdateContext({locShowTaskForm: false, locIsEditMode: false, locCurrentTask: Blank()});
+
     Children:
-      - Label2:
-          Control: Label@2.5.1
+      # --- Top Bar with Back Button and Title ---
+      - conWOTasksHeader:
+          Control: ModernAutoWidthHeightContainer@1.0.0
           Properties:
-            Align: =Align.Center
-            BorderColor: =RGBA(32, 54, 71, 1)
-            Fill: =RGBA(193, 200, 206, 1)
-            Font: =Font.'Open Sans'
-            Height: =33.60
-            PaddingBottom: =4.00
-            PaddingLeft: =4.00
-            Size: =11.20
-            Text: |-
-              ="Tasks for WO: " & LookUp(CMMS_WorkOrders, WorkOrderID = SelectedWorkOrderID).WorkOrderNumber
-            Width: =253
-            Y: =0.00
-      - Button1_2:
-          Control: Classic/Button@2.2.0
+            Fill: =RGBA(255, 255, 255, 1) # White background for header
+            Width: =Parent.Width
+            Height: =60
+            LayoutDirection: LayoutDirection.Horizontal
+            LayoutAlignItems: LayoutAlignItems.Center
+            PaddingLeft: =20
+            PaddingRight: =20
+            DropShadow: "DropShadow.Light"
+          Children:
+            - icoBackWOTasks:
+                Control: Icon@2.3.0
+                Properties:
+                  Icon: =Icon.ChevronLeft
+                  Size: =28
+                  Color: =RGBA(56, 102, 158, 1)
+                  OnSelect: "=Back()"
+                  Height: =Parent.Height
+                  Width: =40
+            - lblWOTasksTitle:
+                Control: Label@2.5.1
+                Properties:
+                  Text: ="Tasks for WO: " & LookUp(CMMS_WorkOrders, WorkOrderID = gblSelectedWorkOrderID).WorkOrderNumber
+                  Font: =Font.'Segoe UI Semibold'
+                  Size: =16
+                  PaddingLeft: =10
+                  Height: =Parent.Height
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =Parent.Width - Self.X - btnWOTasksAddNew.Width - 20
+
+            - btnWOTasksAddNew:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Text: ="Add New Task"
+                  Fill: =RGBA(56, 102, 158, 1)
+                  Color: =RGBA(255, 255, 255, 1)
+                  Height: =40
+                  Width: =150
+                  RadiusTopLeft: =5
+                  RadiusBottomLeft: =5
+                  RadiusTopRight: =5
+                  RadiusBottomRight: =5
+                  OnSelect: "=UpdateContext({locIsEditMode: false, locCurrentTask: Blank(), locShowTaskForm: true}); NewForm(formWOTaskEdit);"
+                  X: =Parent.Width - Self.Width - Parent.PaddingRight # Align Right
+
+      # --- Main Content Area for Tasks List ---
+      - conWOTasksListArea:
+          Control: ModernAutoWidthHeightContainer@1.0.0
           Properties:
-            BorderColor: =ColorFade(Self.Fill, -15%)
-            Color: =RGBA(255, 255, 255, 1)
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            Fill: =RGBA(100, 118, 132, 1)
-            Font: =Font.'Open Sans'
-            Height: =34.40
-            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
-            HoverColor: =RGBA(255, 255, 255, 1)
-            HoverFill: =ColorFade(RGBA(100, 118, 132, 1), -20%)
-            OnSelect: |-
-              =
-              Back()
-            PaddingBottom: =4.00
-            PaddingLeft: =4.00
-            PressedBorderColor: =Self.Fill
-            PressedColor: =Self.Fill
-            PressedFill: =Self.Color
-            Size: =10.40
-            Text: ="Back"
-            Width: =105
-            Y: =605.60
+            Width: =Parent.Width
+            Height: =Parent.Height - conWOTasksHeader.Height
+            Padding: =20
+            LayoutDirection: LayoutDirection.Vertical
+            LayoutGap: =15
+            Visible: =!locShowTaskForm # Show if form is hidden
+          Children:
+            # Column Headers for Task List
+            - conWOTaskListHeaders:
+                Control: ModernAutoWidthHeightContainer@1.0.0
+                Properties:
+                  LayoutDirection: LayoutDirection.Horizontal
+                  Width: =Parent.Width
+                  Height: =40
+                  PaddingLeft: =10 # Indent to align with gallery items
+                  Style: "ContainerStyle.Plain" # No fill
+                Children:
+                  - lblWOTaskHeaderSeq:
+                      Control: Label@2.5.1
+                      Properties: Text:="Seq"; FontWeight: =FontWeight.Semibold; Width: =50
+                  - lblWOTaskHeaderDesc:
+                      Control: Label@2.5.1
+                      Properties: Text:="Description"; FontWeight: =FontWeight.Semibold; Width: =Parent.Width * 0.45
+                  - lblWOTaskHeaderStatus:
+                      Control: Label@2.5.1
+                      Properties: Text:="Status"; FontWeight: =FontWeight.Semibold; Width: =150
+                  - lblWOTaskHeaderEstHrs:
+                      Control: Label@2.5.1
+                      Properties: Text:="Est. Hrs"; FontWeight: =FontWeight.Semibold; Width: =80
+                  - lblWOTaskHeaderActHrs:
+                      Control: Label@2.5.1
+                      Properties: Text:="Act. Hrs"; FontWeight: =FontWeight.Semibold; Width: =80
+                  - lblWOTaskHeaderActions: # For Edit button
+                      Control: Label@2.5.1
+                      Properties: Text:="Actions"; FontWeight: =FontWeight.Semibold; Width: =100
+
+            - galWorkOrderTasks:
+                Control: Gallery@2.15.0 # Using Classic Gallery for more control
+                Variant: Vertical
+                Properties:
+                  Items: "=SortByColumns(Filter(CMMS_WorkOrderTasks, WorkOrderID = gblSelectedWorkOrderID), "SequenceNumber", SortOrder.Ascending)" # FR-TASK-002
+                  TemplateSize: =60
+                  Width: =Parent.Width
+                  Height: =Parent.Height - conWOTaskListHeaders.Height - 20 # Adjust for padding/gap
+                  ShowScrollbar: =true
+                  BorderColor: =RGBA(200, 200, 200, 1)
+                  BorderThickness: =1
+                Children:
+                  - lblTaskSequence:
+                      Control: Label@2.5.1
+                      Properties: Text: =ThisItem.SequenceNumber; X:=10; Y:= (Parent.TemplateHeight - Self.Height)/2; Width:=40
+                  - lblTaskDescription:
+                      Control: Label@2.5.1
+                      Properties: Text: =ThisItem.TaskDescription; X:=lblTaskSequence.X + lblTaskSequence.Width + 10; Y:= (Parent.TemplateHeight - Self.Height)/2; Width:=galWorkOrderTasks.Width * 0.40; AutoHeight:=true; Wrap:=true
+                  - ddTaskStatus: # FR-TASK-003 (Inline status update)
+                      Control: Classic/DropDown@2.3.1
+                      Properties:
+                        Items: =["Pending", "In Progress", "Completed", "On Hold"] # Example statuses
+                        Default: =ThisItem.Status
+                        X: =lblTaskDescription.X + lblTaskDescription.Width + 10
+                        Y: =(Parent.TemplateHeight - Self.Height)/2
+                        Width: =140
+                        Height: =40
+                        OnSelect: "=Patch(CMMS_WorkOrderTasks, Self.Selected.TaskID, {Status: Self.Selected.Value}); Refresh(CMMS_WorkOrderTasks);"
+                  - lblTaskEstHours:
+                      Control: Label@2.5.1
+                      Properties: Text: =Text(ThisItem.EstimatedHours, "[$-en-US]0.00"); X:=ddTaskStatus.X + ddTaskStatus.Width + 10; Y:= (Parent.TemplateHeight - Self.Height)/2; Width:=70; Align:=Align.Right
+                  - txtTaskActualHours: # FR-TASK-005 (Inline actual hours update)
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        Default: =Text(ThisItem.ActualHours, "[$-en-US]0.00")
+                        X: =lblTaskEstHours.X + lblTaskEstHours.Width + 10
+                        Y: =(Parent.TemplateHeight - Self.Height)/2
+                        Width: =70
+                        Height: =40
+                        Format: =TextFormat.Number
+                        OnLostFocus: "=Patch(CMMS_WorkOrderTasks, ThisItem.TaskID, {ActualHours: Value(Self.Text)}); Refresh(CMMS_WorkOrderTasks);"
+                  - icoEditTask:
+                      Control: Icon@2.3.0
+                      Properties:
+                        Icon: =Icon.Edit
+                        X: =txtTaskActualHours.X + txtTaskActualHours.Width + 20
+                        Y: =(Parent.TemplateHeight - Self.Height)/2
+                        Color: =RGBA(56, 102, 158, 1)
+                        OnSelect: "=UpdateContext({locIsEditMode: true, locCurrentTask: ThisItem, locShowTaskForm: true}); EditForm(formWOTaskEdit); ResetForm(formWOTaskEdit);" # FR-TASK-004 (Edit)
+
+      # --- Form Container for Adding/Editing Tasks (Initially Hidden) ---
+      - conWOTaskFormArea:
+          Control: ModernAutoWidthHeightContainer@1.0.0
+          Properties:
+            Width: =Parent.Width
+            Height: =Parent.Height - conWOTasksHeader.Height
+            Padding: =30
+            Fill: =RGBA(255, 255, 255, 1)
+            Visible: =locShowTaskForm # Controlled by locShowTaskForm variable
+          Children:
+            - formWOTaskEdit: # FR-TASK-001 (Add Task Form) / FR-TASK-004 (Edit Task Form)
+                Control: Form@2.4.3
+                Variant: Classic
+                Layout: Vertical
+                Properties:
+                  DataSource: =CMMS_WorkOrderTasks
+                  Item: =locCurrentTask
+                  Width: =Parent.Width * 0.7 # Center the form a bit
+                  X: =(Parent.Width - Self.Width) / 2
+                  Height: =Parent.Height - 100 # Space for buttons
+                  OnSuccess: "=Refresh(CMMS_WorkOrderTasks); UpdateContext({locShowTaskForm: false, locIsEditMode: false, locCurrentTask: Blank()});"
+                  OnFailure: "=Notify("Error saving task.", NotificationType.Error);"
+                Children:
+                  # SequenceNumber - Usually auto-calculated or user-entered
+                  - SequenceNumber_DataCard:
+                      Control: TypedDataCard@1.0.7; Properties: DataField:="SequenceNumber"
+                  - TaskDescription_DataCard:
+                      Control: TypedDataCard@1.0.7; Properties: DataField:="TaskDescription"; ControlType: ="MultilineText"
+                  - Status_DataCard: # Status on form (can also be set via gallery dropdown)
+                      Control: TypedDataCard@1.0.7; Properties: DataField:="Status"; AllowedValues:=["Pending", "In Progress", "Completed", "On Hold"]
+                  - EstimatedHours_DataCard:
+                      Control: TypedDataCard@1.0.7; Properties: DataField:="EstimatedHours"
+                  - ActualHours_DataCard:
+                      Control: TypedDataCard@1.0.7; Properties: DataField:="ActualHours"
+                  # WorkOrderID is set programmatically before submit
+                  # TaskID is auto-generated by DB
+
+            - conWOTaskFormButtons:
+                Control: ModernAutoWidthHeightContainer@1.0.0
+                Properties:
+                  LayoutDirection: LayoutDirection.Horizontal
+                  LayoutGap: =15
+                  Width: =formWOTaskEdit.Width
+                  X: =formWOTaskEdit.X
+                  Y: =formWOTaskEdit.Y + formWOTaskEdit.Height + 20
+                  Height: =50
+                Children:
+                  - btnWOTaskSave:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Text: ="Save Task"
+                        Fill: =RGBA(56, 102, 158, 1)
+                        Color: =RGBA(255, 255, 255, 1)
+                        Width: =120
+                        Height: =Parent.Height
+                        OnSelect: |-
+                          =If(
+                              locIsEditMode,
+                              SubmitForm(formWOTaskEdit),
+                              # For new tasks, set WorkOrderID before submitting
+                              Patch(
+                                  CMMS_WorkOrderTasks,
+                                  Defaults(CMMS_WorkOrderTasks),
+                                  formWOTaskEdit.Updates,
+                                  {WorkOrderID: gblSelectedWorkOrderID}
+                              );
+                              If( IsEmpty(Errors(CMMS_WorkOrderTasks)),
+                                  Notify("Task created successfully!", NotificationType.Success);
+                                  Refresh(CMMS_WorkOrderTasks);
+                                  UpdateContext({locShowTaskForm: false, locIsEditMode: false, locCurrentTask: Blank()}),
+                                  Notify("Error creating task. " & First(Errors(CMMS_WorkOrderTasks)).Message, NotificationType.Error)
+                              )
+                          );
+                  - btnWOTaskCancel:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Text: ="Cancel"
+                        Width: =120
+                        Height: =Parent.Height
+                        OnSelect: "=UpdateContext({locShowTaskForm: false, locIsEditMode: false, locCurrentTask: Blank()}); ResetForm(formWOTaskEdit);"
